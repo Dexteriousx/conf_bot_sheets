@@ -1,7 +1,10 @@
 """
 sheets.py — вся работа с Google Sheets
 """
+import os
+import json
 import logging
+
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -23,10 +26,20 @@ SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
 
 def _get_service():
-    creds = Credentials.from_service_account_file(
-        GOOGLE_CREDS_FILE,
-        scopes=SCOPES,
-    )
+    creds_json = os.getenv("GOOGLE_CREDS_JSON")
+
+    if creds_json:
+        info = json.loads(creds_json)
+        creds = Credentials.from_service_account_info(
+            info,
+            scopes=SCOPES,
+        )
+    else:
+        creds = Credentials.from_service_account_file(
+            GOOGLE_CREDS_FILE,
+            scopes=SCOPES,
+        )
+
     return build("sheets", "v4", credentials=creds, cache_discovery=False)
 
 
