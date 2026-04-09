@@ -4,7 +4,10 @@ sheets.py — вся работа с Google Sheets
 Таблица = источник правды.
 Google Forms пишет строки → бот читает и дописывает Telegram ID / флаги.
 """
+import os
+import json
 import logging
+
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -17,8 +20,19 @@ from config import (
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
+
 def _get_service():
-    creds = Credentials.from_service_account_file(GOOGLE_CREDS_FILE, scopes=SCOPES)
+    creds_json = os.getenv("GOOGLE_CREDS_JSON")
+
+    if creds_json:
+        info = json.loads(creds_json)
+        creds = Credentials.from_service_account_info(info, scopes=SCOPES)
+    else:
+        creds = Credentials.from_service_account_file(
+            GOOGLE_CREDS_FILE,
+            scopes=SCOPES
+        )
+
     return build("sheets", "v4", credentials=creds, cache_discovery=False)
 
 
@@ -29,21 +43,27 @@ def _get_all_rows() -> list[list]:
         result = (
             svc.spreadsheets()
             .values()
-            .get(spreadsheetId=SPREADSHEET_ID, range=SHEET_NAME)
+            .get(
+                spreadsheetId=SPREADSHEET_ID,
+                range=SHEET_NAME
+            )
             .execute()
         )
         return result.get("values", [])
     except HttpError as e:
         logging.error(f"Sheets read error: {e}")
         return []
+    except Exception as e:
+        logging.error(f"Sheets unexpected read error: {e}")
+        return []
 
 
 def _write_cell(row_index: int, col_index: int, value: str):
     """row_index — 0-based индекс строки данных (без заголовка)."""
-    # Sheets API: строки с 1, +1 за заголовок → row_index + 2
     sheet_row = row_index + 2
     col_letter = chr(ord("A") + col_index)
-    cell_range = f"{SHEET_NAME}!{col_letter}{sheet_row}"
+    cell_range = f"'{SHEET_NAME}'!{col_letter}{sheet_row}"
+
     try:
         svc = _get_service()
         svc.spreadsheets().values().update(
@@ -54,6 +74,8 @@ def _write_cell(row_index: int, col_index: int, value: str):
         ).execute()
     except HttpError as e:
         logging.error(f"Sheets write error: {e}")
+    except Exception as e:
+        logging.error(f"Sheets unexpected write error: {e}")
 
 
 def _safe_get(row: list, col: int, default: str = "") -> str:
@@ -63,8 +85,6 @@ def _safe_get(row: list, col: int, default: str = "") -> str:
         return default
 
 
-# ─── Public API ───────────────────────────────────────────────────────────────
-
 def find_row_by_email(email: str) -> tuple[int, list] | None:
     """
     Ищет строку по email (без учёта регистра).
@@ -72,7 +92,7 @@ def find_row_by_email(email: str) -> tuple[int, list] | None:
     row_index — 0-based, не считая заголовка.
     """
     rows = _get_all_rows()
-    for i, row in enumerate(rows[1:], start=0):  # пропускаем заголовок
+    for i, row in enumerate(rows[1:], start=0):
         if _safe_get(row, COL_EMAIL, "").strip().lower() == email.strip().lower():
             return i, row
     return None
@@ -96,10 +116,11 @@ def get_unreminded_participants(days: int) -> list[tuple[int, int]]:
 
     rows = _get_all_rows()
     result = []
+
     for i, row in enumerate(rows[1:], start=0):
-        confirmed  = _safe_get(row, COL_CONFIRMED, "").upper()
-        tg_id_str  = _safe_get(row, COL_TELEGRAM_ID, "")
-        reminded   = _safe_get(row, col, "").upper()
+        confirmed = _safe_get(row, COL_CONFIRMED, "").strip().upper()
+        tg_id_str = _safe_get(row, COL_TELEGRAM_ID, "").strip()
+        reminded = _safe_get(row, col, "").strip().upper()
 
         if confirmed == "TRUE" and tg_id_str.isdigit() and reminded != "TRUE":
             result.append((i, int(tg_id_str)))
@@ -117,7 +138,7 @@ def mark_reminded(row_index: int, days: int):
 def get_participant_by_telegram_id(telegram_id: int) -> tuple[int, list] | None:
     rows = _get_all_rows()
     for i, row in enumerate(rows[1:], start=0):
-        if _safe_get(row, COL_TELEGRAM_ID, "") == str(telegram_id):
+        if _safe_get(row, COL_TELEGRAM_ID, "").strip() == str(telegram_id):
             return i, row
     return None
 
@@ -127,4 +148,4 @@ def is_confirmed(telegram_id: int) -> bool:
     if not result:
         return False
     _, row = result
-    return _safe_get(row, COL_CONFIRMED, "").upper() == "TRUE"
+    return _safe_get(row, COL_CONFIRMED, "").strip().upper() == "TRUE"
