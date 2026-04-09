@@ -1,16 +1,15 @@
 import os
 from datetime import datetime
 
-BOT_TOKEN = os.getenv("BOT_TOKEN", "8389489228:AAEFzeN2I7UNob9iEHrBQkhDkoNYfK7WyYI")
+# ─── ОБЯЗАТЕЛЬНО ЗАПОЛНИТЬ ───────────────────────────────────────────────────
+
+BOT_TOKEN = os.getenv("BOT_TOKEN", "")
 
 # ID таблицы Google Sheets (из URL: docs.google.com/spreadsheets/d/ВОТ_ЭТО/edit)
-SPREADSHEET_ID = "1VCzRlf1-TN7tcOMfGvEj4-nN3HfBzKK6p9na7JyI0Wo"
+SPREADSHEET_ID = os.getenv("SPREADSHEET_ID", "1VCzRlf1-TN7tcOMfGvEj4-nN3HfBzKK6p9na7JyI0Wo")
 
 # Путь к JSON-ключу сервисного аккаунта Google
 GOOGLE_CREDS_FILE = os.getenv("GOOGLE_CREDS_FILE", "credentials.json")
-
-# Ссылка на Google Form / форму регистрации
-REGISTRATION_FORM_URL = os.getenv("REGISTRATION_FORM_URL", "https://forms.gle/WXGnNbbsZZtbKUYc8")
 
 # ─── КОНФЕРЕНЦИЯ ──────────────────────────────────────────────────────────────
 
@@ -18,14 +17,15 @@ CONF_DATE     = datetime(2026, 4, 18)
 CONF_NAME     = "Toastmasters 2026 International Conference"
 CONF_TAGLINE  = "Nomads of the Digital Era: Drive Change with Human Skills"
 CONF_DATE_STR = "18 апреля 2026"
-CONF_TIME     = "10:00–18:00"
+CONF_TIME     = "Уточняется"
 CONF_PLACE    = "Алматы, University of International Business (UIB)"
 CONF_FORMAT   = "Гибридный формат: офлайн + онлайн-трансляция"
 CONF_STREAM   = "Ссылка на трансляцию будет отправлена позже"
-CONF_MAP      = "https://maps.google.com/?q=University+of+International+Business+Almaty"
+CONF_MAP      = "https://2gis.kz/almaty/geo/9429940000801589/76.949911,43.242245"
 CONF_LANG     = "Русский, английский и казахский"
-SUPPORT_USERNAME = "@conference_support"
+SUPPORT_USERNAME = "@conference_support"  # ← заменить на реальный
 
+# Приветственное сообщение (RU)
 WELCOME_TEXT = (
     "👋 Привет! Я бот конференции\n\n"
     f"<b>{CONF_NAME}</b>\n"
@@ -39,29 +39,37 @@ WELCOME_TEXT = (
     "который ты указал при регистрации на сайте 👇"
 )
 
+# ─── ПРОГРАММА ────────────────────────────────────────────────────────────────
+
 PROGRAM_TRACKS = [
-    {"track": "🤖 AI & Technology",             "desc": "Искусственный интеллект и будущее технологий"},
+    {"track": "🤖 AI & Technology",            "desc": "Искусственный интеллект и будущее технологий"},
     {"track": "🏆 Leadership & Future of Work", "desc": "Лидерство и рынок труда завтрашнего дня"},
-    {"track": "🗣 Communication & Influence",    "desc": "Коммуникация, влияние и публичные выступления"},
+    {"track": "🗣 Communication & Influence",   "desc": "Коммуникация, влияние и публичные выступления"},
 ]
 
 PROGRAM_FORMATS = [
     "🎤 Keynote-выступления",
     "💬 Панельные дискуссии",
     "🛠 Воркшопы",
-    "💼 Career Corner — карьерная мастерская",
     "🏅 Конкурсы Toastmasters",
 ]
+
+# ─── ОРГАНИЗАТОРЫ ─────────────────────────────────────────────────────────────
 
 ORGANIZERS = [
     "Almaty Toastmasters",
     "Astana Toastmasters",
-    "Kazakh Toastmasters",
+    "Qazaq Toastmasters",
 ]
+
+# ─── СПИКЕРЫ (заполнить позже) ────────────────────────────────────────────────
 
 SPEAKERS = [
     # {"name": "Имя Фамилия", "topic": "Тема доклада"},
+    # Спикеры будут объявлены позже
 ]
+
+# ─── FAQ ──────────────────────────────────────────────────────────────────────
 
 FAQ = [
     {
@@ -78,7 +86,7 @@ FAQ = [
     },
     {
         "q": "Это офлайн или онлайн?",
-        "a": "Гибридный формат: офлайн в Алматы + онлайн-трансляция для всех желающих.",
+        "a": f"Гибридный формат: офлайн в Алматы + онлайн-трансляция для всех желающих.",
     },
     {
         "q": "На каком языке будет мероприятие?",
@@ -126,9 +134,11 @@ FAQ = [
     },
     {
         "q": "Как связаться с организаторами?",
-        "a": f"Напишите нам: {SUPPORT_USERNAME}",
+        "a": f"Напишите нам: {SUPPORT_USERNAME}\n\nВам ответит команда организаторов.",
     },
 ]
+
+# ─── ТЕКСТЫ НАПОМИНАНИЙ ───────────────────────────────────────────────────────
 
 REMINDERS = {
     7: (
@@ -136,34 +146,38 @@ REMINDERS = {
         f"🗓 <b>Дата:</b> {CONF_DATE_STR}\n"
         f"📍 <b>Место:</b> {CONF_PLACE}\n"
         f"🎥 <b>Формат:</b> {CONF_FORMAT}\n\n"
-        "Программа и детали — в меню бота. До встречи! 🚀"
+        f"Программа и детали — в меню бота. До встречи! 🚀"
     ),
     3: (
         f"⏳ До <b>{CONF_NAME}</b> осталось 3 дня!\n\n"
         f"📍 <b>Адрес:</b> {CONF_PLACE}\n\n"
-        "Готовь вопросы для спикеров и не забудь пригласить коллег 💬"
+        f"Готовь вопросы для спикеров и не забудь пригласить коллег 💬"
     ),
     2: (
         f"🔔 Послезавтра — <b>{CONF_NAME}</b>!\n\n"
         f"📍 {CONF_PLACE}\n\n"
-        "Не забудь зарядить телефон и взять хорошее настроение 😊"
+        f"Не забудь зарядить телефон и взять хорошее настроение 😊"
     ),
     1: (
         f"🚀 Завтра — <b>{CONF_NAME}</b>!\n\n"
         f"📍 <b>Место:</b> {CONF_PLACE}\n\n"
-        "Ждём тебя! До встречи завтра 👋"
+        f"Ждём тебя! До встречи завтра 👋"
     ),
 }
 
-COL_TIMESTAMP   = 0
-COL_EMAIL       = 1
-COL_NAME        = 2
-COL_PHONE       = 3
-COL_CONFIRMED   = 9
-COL_REM_7       = 10
-COL_REM_3       = 11
-COL_REM_2       = 12
-COL_REM_1       = 13
-COL_TELEGRAM_ID = 14
+# ─── КОЛОНКИ В GOOGLE SHEETS ──────────────────────────────────────────────────
+# Google Forms создаёт колонки автоматически.
+# Укажи номера колонок (начиная с 0) в твоей таблице:
 
-SHEET_NAME = "Ответы на форму (1)"
+COL_TIMESTAMP   = 0   # Метка времени (автоматически от Google Forms)
+COL_EMAIL       = 1   # Email
+COL_NAME        = 2   # Имя
+COL_PHONE       = 3   # Телефон
+COL_TELEGRAM_ID = 4   # Telegram ID (бот заполняет сам)
+COL_CONFIRMED   = 5   # Подтверждён (бот заполняет сам)
+COL_REM_7       = 6   # Напоминание за 7 дней отправлено
+COL_REM_3       = 7   # Напоминание за 3 дня
+COL_REM_2       = 8   # Напоминание за 2 дня
+COL_REM_1       = 9   # Напоминание за 1 день
+
+SHEET_NAME = "Ответы на форму 1"  # Название листа в таблице
