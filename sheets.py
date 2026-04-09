@@ -45,7 +45,7 @@ def _get_all_rows() -> list[list]:
             .values()
             .get(
                 spreadsheetId=SPREADSHEET_ID,
-                range=SHEET_NAME
+                range=f"'{SHEET_NAME}'!A:Z"
             )
             .execute()
         )
