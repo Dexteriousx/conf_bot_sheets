@@ -14,7 +14,7 @@ GOOGLE_CREDS_FILE = os.getenv("GOOGLE_CREDS_FILE", "credentials.json")
 # ─── КОНФЕРЕНЦИЯ ──────────────────────────────────────────────────────────────
 
 CONF_DATE     = datetime(2026, 4, 18)
-CONF_NAME     = "Toastmasters 2026 International Conference"
+CONF_NAME     = "Qazaq Toastmasters 2026 International Conference"
 CONF_TAGLINE  = "Nomads of the Digital Era: Drive Change with Human Skills"
 CONF_DATE_STR = "18 апреля 2026"
 CONF_TIME     = "Уточняется"
@@ -23,7 +23,7 @@ CONF_FORMAT   = "Гибридный формат: офлайн + онлайн-т
 CONF_STREAM   = "Ссылка на трансляцию будет отправлена позже"
 CONF_MAP      = "https://2gis.kz/almaty/geo/9429940000801589/76.949911,43.242245"
 CONF_LANG     = "Русский, английский и казахский"
-SUPPORT_USERNAME = "@conference_support"  # ← заменить на реальный
+SUPPORT_USERNAME = "@akbotawaw24"  # ← заменить на реальный
 
 # Приветственное сообщение (RU)
 WELCOME_TEXT = (

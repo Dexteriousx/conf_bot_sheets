@@ -1,9 +1,11 @@
+
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.interval import IntervalTrigger
+from datetime import datetime, timedelta
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
-from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-
 from config import (
     CONF_NAME,
     CONF_DATE_STR,
@@ -27,6 +29,38 @@ from keyboards import (
 
 router = Router()
 
+# Функция для отправки напоминаний
+async def send_reminders():
+    today = datetime.today()
+
+    # Напоминания за 3, 2 и 1 день
+    reminder_dates = [
+        today + timedelta(days=3),
+        today + timedelta(days=2),
+        today + timedelta(days=1),
+    ]
+
+    for date in reminder_dates:
+        date_str = date.strftime("%d.%m.%Y")
+
+        # Получаем участников, которым не отправляли напоминания за эти дни
+        participants = get_unreminded_participants(date.day)
+        for participant in participants:
+            user_id = participant[1]  # Получаем telegram_id
+            await bot.send_message(
+                user_id, 
+                f"⏰ Напоминание: конференция {CONF_NAME} уже через {date_str}!"
+            )
+
+            # Отмечаем, что напоминание отправлено
+            mark_reminder_sent(participant[0], date.day)
+
+
+scheduler = AsyncIOScheduler()
+
+# Запускаем напоминания каждое утро в 9:00
+scheduler.add_job(send_reminders, IntervalTrigger(hours=24, start_date="2026-04-09 09:00:00"))
+scheduler.start()
 
 REGISTRATION_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdXaAirAz2iyyYAUu3v0AIa2nrO34xe81Jr_qOb4J6uPQUZRA/viewform?usp=dialog"
 
@@ -95,11 +129,10 @@ def tr(user_id: int, ru: str, en: str) -> str:
 
 @router.message(CommandStart())
 async def cmd_start(message: Message, state: FSMContext):
-    await state.clear()
-    await message.answer(
-        "Выберите язык / Choose language",
-        reply_markup=language_keyboard(),
-    )
+    await message.answer("Выберите язык / Choose language", reply_markup=language_keyboard())
+    
+    # Вызываем функцию отправки напоминаний
+    await send_reminders()  # <-- вызываем функцию отправки напоминаний
 
 
 @router.callback_query(F.data.in_({"lang_ru", "lang_en"}))
@@ -319,7 +352,7 @@ async def cb_location(call: CallbackQuery):
         tr(
             call.from_user.id,
             f"📍 <b>Адрес:</b> {CONF_PLACE}\n\nНажми кнопку ниже, чтобы открыть карту 👇",
-            f"📍 <b>Address:</b> {CONF_PLACE}\n\nTap the button below to open the map 👇",
+            f"📍 <b>Address:</b> {CONF_PLACE}\n\nTap the button below to open the map👇",
         ),
         parse_mode="HTML",
         reply_markup=location_keyboard(get_lang(call.from_user.id), CONF_MAP),
