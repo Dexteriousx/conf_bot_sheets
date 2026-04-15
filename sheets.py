@@ -24,14 +24,11 @@ SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 def _get_service():
     creds_json = os.getenv("GOOGLE_CREDS_JSON")
 
-    if creds_json:
-        info = json.loads(creds_json)
-        creds = Credentials.from_service_account_info(info, scopes=SCOPES)
-    else:
-        creds = Credentials.from_service_account_file(
-            GOOGLE_CREDS_FILE,
-            scopes=SCOPES
-        )
+    if not creds_json:
+        raise ValueError("GOOGLE_CREDS_JSON is not set")
+
+    info = json.loads(creds_json)
+    creds = Credentials.from_service_account_info(info, scopes=SCOPES)
 
     return build("sheets", "v4", credentials=creds, cache_discovery=False)
 

@@ -65,8 +65,24 @@ ORGANIZERS = [
 # ─── СПИКЕРЫ (заполнить позже) ────────────────────────────────────────────────
 
 SPEAKERS = [
-    # {"name": "Имя Фамилия", "topic": "Тема доклада"},
-    # Спикеры будут объявлены позже
+    {"name": "Tom Bartkoske", "topic": "Leadership & EQ Trainer; Founder of Almaty Toastmasters Club"},
+    {"name": "Michal Moroz", "topic": "Chief Innovation Officer at Makimo Software Development Services"},
+    {"name": "Karolina Boguszewska", "topic": "Neuroleader, trainer, scientist and Scrum Master"},
+    {"name": "Akbota Sabetova", "topic": "TEDx speaker; Kazakhstan public speaking champion; business trainer"},
+    {"name": "Ivan Lutsenko", "topic": "Android Tech Lead at Bereke Bank"},
+    {"name": "Latina Satarova", "topic": "Coach (Erickson International, Canada); author of 'Everyone Is OK: Skills of Nonviolent Communication'"},
+    {"name": "Madina Imanaliyeva", "topic": "Director of Communications at MEGA"},
+    {"name": "Margarita Barykina", "topic": "Actress at the TRI playback theater; member of the K5 dance team"},
+    {"name": "Ilyas Mustafin", "topic": "CTO at Jet Finance / Enterprise Architect"},
+    {"name": "Renata Nureyeva", "topic": "Founder of ProHunters"},
+    {"name": "Gulnara Shakirova", "topic": "CEO of ID-Group; business trainer"},
+    {"name": "Andrew Kulpecz, PhD", "topic": "General Manager, Chevronmuaigas, Inc"},
+    {"name": "Alexander Tyutin", "topic": "DevSecOps at Semrush"},
+    {"name": "Zhanar Makhambetova", "topic": "CMO at Yandex Cloud"},
+    {"name": "Altynai Zhumagali", "topic": "Talent Acquisition Partner at Wolt; ICF certified coach"},
+    {"name": "Igor Palkin", "topic": "Founder & CEO of Agesta AI"},
+    {"name": "Ruslan Dudov", "topic": "PMO Expert; VP of PMI Kazakhstan Chapter"},
+    {"name": "Aigerim Abdrakhmanova", "topic": "CEO in fintech; career coach; FMCG experience"},
 ]
 
 # ─── FAQ ──────────────────────────────────────────────────────────────────────

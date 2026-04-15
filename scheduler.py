@@ -7,7 +7,7 @@ from aiogram import Bot
 from config import CONF_DATE, REMINDERS
 from sheets import get_unreminded_participants, mark_reminded
 
-scheduler = AsyncIOScheduler(timezone="Europe/Moscow")
+scheduler = AsyncIOScheduler(timezone="Asia/Almaty")
 
 
 def start_scheduler(bot: Bot):
@@ -25,8 +25,8 @@ def start_scheduler(bot: Bot):
 
 
 async def send_reminders(bot: Bot):
-    today     = datetime.now().date()
-    conf_day  = CONF_DATE.date()
+    today = datetime.now().date()
+    conf_day = CONF_DATE.date()
     days_left = (conf_day - today).days
 
     logging.info(f"[Scheduler] До конференции: {days_left} дней")
@@ -34,7 +34,7 @@ async def send_reminders(bot: Bot):
     if days_left not in REMINDERS:
         return
 
-    text         = REMINDERS[days_left]
+    text = REMINDERS[days_left]
     participants = get_unreminded_participants(days_left)
 
     sent = 0
