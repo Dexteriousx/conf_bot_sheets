@@ -3,7 +3,7 @@ from datetime import datetime
 
 # ─── ОБЯЗАТЕЛЬНО ЗАПОЛНИТЬ ───────────────────────────────────────────────────
 
-BOT_TOKEN = os.getenv("BOT_TOKEN", "")
+BOT_TOKEN = os.getenv("BOT_TOKEN", "8389489228:AAEFzeN2I7UNob9iEHrBQkhDkoNYfK7WyYI")
 
 # ID таблицы Google Sheets (из URL: docs.google.com/spreadsheets/d/ВОТ_ЭТО/edit)
 SPREADSHEET_ID = os.getenv("SPREADSHEET_ID", "1VCzRlf1-TN7tcOMfGvEj4-nN3HfBzKK6p9na7JyI0Wo")
@@ -185,15 +185,17 @@ REMINDERS = {
 # Google Forms создаёт колонки автоматически.
 # Укажи номера колонок (начиная с 0) в твоей таблице:
 
-COL_TIMESTAMP   = 0   # Метка времени (автоматически от Google Forms)
-COL_EMAIL       = 1   # Email
-COL_NAME        = 2   # Имя
-COL_PHONE       = 3   # Телефон
-COL_TELEGRAM_ID = 4   # Telegram ID (бот заполняет сам)
-COL_CONFIRMED   = 5   # Подтверждён (бот заполняет сам)
-COL_REM_7       = 6   # Напоминание за 7 дней отправлено
-COL_REM_3       = 7   # Напоминание за 3 дня
-COL_REM_2       = 8   # Напоминание за 2 дня
-COL_REM_1       = 9   # Напоминание за 1 день
+COL_TIMESTAMP   = 1   # B
+COL_EMAIL       = 2   # C
+COL_NAME        = 3   # D
+COL_PHONE       = 4   # E
+
+COL_TELEGRAM_ID = 21  # V
+COL_CONFIRMED   = 16  # Q
+
+COL_REM_7       = 17  # R
+COL_REM_3       = 18  # S
+COL_REM_2       = 19  # T
+COL_REM_1       = 20  # U
 
 SHEET_NAME = "Ответы на форму (1)" # Название листа в таблице
