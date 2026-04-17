@@ -104,6 +104,8 @@ async def cmd_start(message: Message, state: FSMContext):
 
 @router.callback_query(F.data.in_({"lang_ru", "lang_en"}))
 async def cb_set_language(call: CallbackQuery, state: FSMContext):
+    await call.answer()
+
     lang = "ru" if call.data == "lang_ru" else "en"
     user_lang[call.from_user.id] = lang
     tg_id = call.from_user.id
@@ -143,6 +145,8 @@ async def cb_set_language(call: CallbackQuery, state: FSMContext):
 
 @router.callback_query(F.data == "already_filled")
 async def cb_already_filled(call: CallbackQuery, state: FSMContext):
+    await call.answer()
+
     await state.set_state(Registration.waiting_email)
     await call.message.answer(
         tr(
@@ -255,6 +259,8 @@ async def cmd_menu(message: Message):
 
 @router.callback_query(F.data == "menu")
 async def cb_menu(call: CallbackQuery):
+    await call.answer()
+
     await call.message.edit_text(
         tr(call.from_user.id, "Главное меню 👇", "Main menu 👇"),
         reply_markup=main_menu(get_lang(call.from_user.id)),
@@ -263,6 +269,8 @@ async def cb_menu(call: CallbackQuery):
 
 @router.callback_query(F.data == "info")
 async def cb_info(call: CallbackQuery):
+    await call.answer()
+
     await call.message.edit_text(
         tr(
             call.from_user.id,
@@ -286,6 +294,8 @@ async def cb_info(call: CallbackQuery):
 
 @router.callback_query(F.data == "speakers")
 async def cb_speakers(call: CallbackQuery):
+    await call.answer()
+
     lang = get_lang(call.from_user.id)
 
     if not SPEAKERS:
@@ -315,6 +325,8 @@ async def cb_speakers(call: CallbackQuery):
 
 @router.callback_query(F.data == "location")
 async def cb_location(call: CallbackQuery):
+    await call.answer()
+
     await call.message.edit_text(
         tr(
             call.from_user.id,
@@ -328,6 +340,8 @@ async def cb_location(call: CallbackQuery):
 
 @router.callback_query(F.data == "faq")
 async def cb_faq(call: CallbackQuery):
+    await call.answer()
+
     lang = get_lang(call.from_user.id)
 
     await call.message.edit_text(
@@ -341,6 +355,8 @@ async def cb_faq(call: CallbackQuery):
 
 @router.callback_query(F.data.startswith("faq_"))
 async def cb_faq_answer(call: CallbackQuery):
+    await call.answer()
+
     lang = get_lang(call.from_user.id)
     idx = int(call.data.split("_")[1])
     item = FAQ_ITEMS[idx]
@@ -357,6 +373,8 @@ async def cb_faq_answer(call: CallbackQuery):
 
 @router.callback_query(F.data == "support")
 async def cb_support(call: CallbackQuery):
+    await call.answer()
+
     await call.message.edit_text(
         tr(
             call.from_user.id,
