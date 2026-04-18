@@ -44,7 +44,6 @@ async def main():
     dp = Dispatcher(storage=MemoryStorage())
     dp.include_router(router)
 
-    await send_once(bot)   # ВРЕМЕННО: разовая рассылка
 
     start_scheduler(bot)
 
